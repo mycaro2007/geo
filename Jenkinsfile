@@ -1,8 +1,11 @@
- pipeline {
+pipeline {
     agent any
-tools {
-  maven 'M2_HOME'
-  }
+    environment {
+        MY_ENV_TOKEN = '35d044d2a87a8f9a62b29aff9fc68e261320aa05'
+    }
+    tools {
+        maven 'M2_HOME'
+    }
     stages {
         stage('maven clean') {
             steps {
@@ -31,7 +34,7 @@ tools {
         }
         stage('maven sonar') {
             steps {
-                sh 'mvn sonar:sonar'
+                sh "mvn sonar:sonar -Dsonar.login=${env.MY_ENV_TOKEN}"
             }
         }
     }
