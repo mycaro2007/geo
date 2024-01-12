@@ -44,15 +44,15 @@ pipeline {
                 // Ping Artifactory
                 jf 'rt ping'
 
-                // Create a file and upload it to a repository named 'my-test-repo' in Artifactory
+                // Create a file and upload it to the 'geoapp' repository in Artifactory
                 sh 'touch test-file'
-                jf 'rt u test-file my-test-repo/'
+                jf 'rt u test-file geoapp/'
 
                 // Publish the build-info to Artifactory
                 jf 'rt bp'
 
-                // Download the test-file
-                jf 'rt dl my-test-repo/test-file'
+                // Download the test-file from the 'geoapp' repository
+                jf 'rt dl geoapp/test-file'
             }
         }
     }
