@@ -1,8 +1,11 @@
 pipeline {
     agent any
-tools {
-  maven 'M2_HOME'
-  }
+    tools {
+        maven 'M2_HOME'
+        // Specifying JFrog CLI tool
+        jfrog 'Jfrog remote cli'
+    }
+
     stages {
         stage('maven clean') {
             steps {
@@ -27,7 +30,29 @@ tools {
         stage('maven package') {
             steps {
                 sh 'mvn package'
-        
+            }
+        }
+        // New Testing stage to use JFrog CLI
+        stage('Testing') {
+            steps {
+                // Show the installed version of JFrog CLI
+                jf '-v'
+
+                // Show the configured JFrog Platform instances
+                jf 'c show'
+
+                // Ping Artifactory
+                jf 'rt ping'
+
+                // Create a file and upload it to a repository named 'my-test-repo' in Artifactory
+                sh 'touch test-file'
+                jf 'rt u test-file my-test-repo/'
+
+                // Publish the build-info to Artifactory
+                jf 'rt bp'
+
+                // Download the test-file
+                jf 'rt dl my-test-repo/test-file'
             }
         }
     }
